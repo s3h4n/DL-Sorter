@@ -92,76 +92,69 @@ FILE_TYPES_AND_PATHS = {
 
 
 def get_unique_filename(
-    destination_directory: str,
     filename: str,
+    destination: str,
 ):
     """
     Generate a unique filename to avoid overwriting existing files in the destination directory.
-
-    Arguments:
-        destination_directory (str): The directory where the file is to be moved.
-        filename (str): The original filename.
-
-    Returns:
-        str: A unique filename that doesn't exist in the destination directory.
     """
 
-    base, ext = os.path.splitext(filename)
-    count = 1
-    new_filename = filename
+    try:
+        base, ext = os.path.splitext(filename)
+        count = 1
+        new_filename = filename
 
-    while os.path.exists(os.path.join(destination_directory, new_filename)):
-        new_filename = f"{base}_{count}{ext}"
-        count += 1
+        while path(path(destination).joinpath(new_filename)).exists():
+            new_filename = f"{base}_{count}{ext}"
+            count += 1
 
-    return new_filename
+        return new_filename
+
+    except Exception as e:
+        print(f"Error while renaming {filename}: {e}")
+        logging.error(f"Error while renaming the file {filename}: {e}")
+
+        logging.critical(f"Aborted.")
+
+        exit(1)
 
 
 def move_single_file(
+    filename: str,
     source: str,
     destination: str,
-    destination_directory: str,
 ):
     """
     Move a single file from the source to the destination, ensuring it doesn't overwrite existing files.
-
-    Arguments:
-        source (str): The path to the source file.
-        destination (str): The desired path of the file in the destination directory.
-        destination_directory (str): The directory where the file should be moved.
-
-    Returns:
-        bool: True if the file is successfully moved, False otherwise.
     """
+
     try:
-        if path(destination).exists():
-            destination = get_unique_filename(destination_directory, destination)
+        if not path(destination).exists():
+            # print(f"{destination} not found. Attempting to create...")
+            logging.info(f"{destination} not found. Attempting to create...")
 
-        path(source).rename(destination)
+            try:
+                path(destination).mkdir(parents=True, exist_ok=True)
+
+                # print(f"{destination} created.")
+                logging.info(f"{destination} created.")
+
+            except Exception as e:
+                print(f"Error while creating {destination}: {e}")
+                logging.error(f"Error while creating {destination}: {e}")
+
+                return False
+
+        _source_file_path = path(source).joinpath(filename)
+        _destination_file_path = path(destination).joinpath(filename)
+
+        if path(_destination_file_path).exists():
+            _destination_file_path = path(destination).joinpath(
+                get_unique_filename(filename, destination)
+            )
+
+        path(_source_file_path).rename(_destination_file_path)
         return True
-
-    except FileNotFoundError:
-        print("Destination Not Found. Attempting to create...")
-        logging.error(msg="Destination Not Found. Attempting to create...")
-
-        try:
-            path(destination_directory).mkdir(parents=True, exist_ok=True)
-
-            print("Destination directory created.")
-            logging.info("Destination directory created.")
-
-            path(source).rename(destination)
-
-            # print("File moved successfully.")
-            # logging.info("File moved successfully.")
-
-            return True
-
-        except Exception as e:
-            print(f"Error while creating destination: {e}")
-            logging.error(f"Error while creating destination: {e}")
-
-            return False
 
     except Exception as e:
         print(f"Error: {e}")
@@ -172,44 +165,28 @@ def move_single_file(
 
 def move_multiple_files(
     source: str,
-    files_list: str,
     destination: str,
+    file_list: list,
     file_types: list,
 ):
     """
     Move multiple files from the source to the destination based on file types.
-
-    Arguments:
-        source (str): The source directory containing the files to be moved.
-        files_list (str): A list of filenames to be moved.
-        destination (str): The destination directory where the files should be moved.
-        file_types (list): A list of file extensions to filter the files to be moved.
-
-    Returns:
-        int: The number of files successfully moved.
     """
 
     successful_moves = 0
 
     try:
-        if not files_list:
+        if not file_list:
             print("No files to move.")
             return True
 
-        for item in files_list:
-            for ft in file_types:
-                if item.endswith(ft):
-                    source_path = f"{source}/{item}"
-                    destination_path = f"{destination}/{item}"
-
+        for filename in file_list:
+            for ftype in file_types:
+                if filename.endswith(ftype):
                     # print(f"Moving: {source}/{item}")
                     # logging.info(f"Moving: {source}/{item}")
 
-                    if move_single_file(
-                        source=source_path,
-                        destination=destination_path,
-                        destination_directory=destination,
-                    ):
+                    if move_single_file(filename, source, destination):
                         successful_moves += 1
 
         return successful_moves
@@ -223,10 +200,13 @@ def main():
     s_moves = {}
 
     for file_type in FILE_TYPES_AND_PATHS:
+        # Update list every iteration.
+        _file_list = os.listdir(DOWNLOADS_DIR)
+
         s_moves[file_type] = move_multiple_files(
             source=DOWNLOADS_DIR,
-            files_list=os.listdir(DOWNLOADS_DIR),
             destination=FILE_TYPES_AND_PATHS[file_type]["path"],
+            file_list=_file_list,
             file_types=FILE_TYPES_AND_PATHS[file_type]["type"],
         )
 
