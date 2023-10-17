@@ -1,3 +1,11 @@
+"""
+
+Author: W.M.S.R. Weerasekara
+About: This script organizes files from a Downloads directory into specified subdirectories based on file types.
+Github: https://github.com/s3h4n/DL-Sorter
+
+"""
+
 from pathlib import Path as path
 import platform
 import logging
@@ -22,7 +30,7 @@ else:
 # Default file types and paths
 FILE_TYPES_AND_PATHS = {
     "Images": {
-        "type": [".png", ".jpg", ".jpeg", ".gif", ".bmp", ".tiff"],
+        "type": [".png", ".jpg", ".jpeg", ".bmp", ".tiff"],
         "path": f"{DOWNLOADS_DIR}/Images/Raster",
     },
     "Vector": {
