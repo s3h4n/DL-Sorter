@@ -3,6 +3,7 @@ import platform
 import logging
 import os
 
+# Logging configuration
 logging.basicConfig(
     filename="dl_sorter.log",
     level=logging.INFO,
@@ -166,7 +167,7 @@ def move_single_file(
 def move_multiple_files(
     source: str,
     destination: str,
-    file_list: list,
+    files_list: list,
     file_types: list,
 ):
     """
@@ -176,11 +177,11 @@ def move_multiple_files(
     successful_moves = 0
 
     try:
-        if not file_list:
+        if not files_list:
             print("No files to move.")
             return True
 
-        for filename in file_list:
+        for filename in files_list:
             for ftype in file_types:
                 if filename.endswith(ftype):
                     # print(f"Moving: {source}/{item}")
@@ -206,11 +207,12 @@ def main():
         s_moves[file_type] = move_multiple_files(
             source=DOWNLOADS_DIR,
             destination=FILE_TYPES_AND_PATHS[file_type]["path"],
-            file_list=_file_list,
+            files_list=_file_list,
             file_types=FILE_TYPES_AND_PATHS[file_type]["type"],
         )
 
     print(s_moves)
 
 
-main()
+if __name__ == "__main__":
+    main()
