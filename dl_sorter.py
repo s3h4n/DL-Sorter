@@ -9,7 +9,7 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s",
 )
 
-# Define the Downloads directory
+# Define the Downloads directory based on OS
 if platform.system() == "Linux":
     DOWNLOADS_DIR = f"{path.home()}/Downloads"
 elif platform.system() == "Windows":
@@ -18,6 +18,7 @@ else:
     print("Unsupported operating system.")
     exit(1)
 
+# Default file types and paths
 FILE_TYPES_AND_PATHS = {
     "Images": {
         "type": [".png", ".jpg", ".jpeg", ".gif", ".bmp", ".tiff"],
@@ -140,8 +141,8 @@ def move_single_file(
         return True
 
     except FileNotFoundError:
-        print("Error: File Not Found. Attempting to create destination...")
-        logging.error(msg="File Not Found. Attempting to create destination...")
+        print("Destination Not Found. Attempting to create...")
+        logging.error(msg="Destination Not Found. Attempting to create...")
 
         try:
             path(destination_directory).mkdir(parents=True, exist_ok=True)
@@ -162,10 +163,9 @@ def move_single_file(
 
             return False
 
-    except FileExistsError:
-        # TODO: Fix this with auto renaming feature.
-        print("Error: File Already exists.")
-        logging.error("Error: File Already exists.")
+    except Exception as e:
+        print(f"Error: {e}")
+        logging.error(f"Error: {e}")
 
         return False
 
