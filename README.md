@@ -3,16 +3,12 @@
 The Download Sorter is a Python script designed to automatically organize files in your downloads directory based on
 their types. It identifies files by their extensions and moves them to specific subdirectories for better organization.
 
----
-
 ## Features
 
 - Automatically sorts files by type into dedicated folders.
 - Handles common file types like images, documents, audio, video, and more.
 - Avoids overwriting existing files with a unique filename generation.
 - Customizable for additional file types and destinations.
-
----
 
 ## Getting Started
 
@@ -57,8 +53,6 @@ to include your preferred file types and destinations.
 }
 ```
 
----
-
 ## Automation
 
 ### Instructions for Windows:
@@ -100,26 +94,18 @@ to include your preferred file types and destinations.
 
 5. Save and exit.
 
----
-
 ## Logging
 
 The script generates a log file named `dl_sorter.log` to track its activity and errors. You can find this log file in
 the same directory as the script.
 
----
-
 ## Contributing
 
 This script is open for contributions. If you have any improvements or bug fixes, feel free to submit a pull request.
 
----
-
 ## License
 
 This project is licensed under the Apache v2 License. See the LICENSE file for details.
-
----
 
 ## Acknowledgments
 
