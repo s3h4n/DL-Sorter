@@ -41,8 +41,8 @@ git clone https://github.com/s3h4n/DL-Sorter.git
 
 ### Customization
 
-You can customize the script by adding or modifying file types and their corresponding paths. Edit
-Edit `structure.json` file to include your preferred file types and destinations.
+You can customize the script by adding or modifying file types and their corresponding paths. Edit `structure.json` file
+to include your preferred file types and destinations.
 
 ```JSON
 {
@@ -52,8 +52,8 @@ Edit `structure.json` file to include your preferred file types and destinations
       ".ext2"
     ],
     "path": "Directory/Sub-Directory"
-  }
-  // Add more custom file types and paths here
+  },
+  "Add more custom file types and paths here...": ""
 }
 ```
 
@@ -76,7 +76,7 @@ Edit `structure.json` file to include your preferred file types and destinations
 ### Instructions for Linux:
 
 1. Open Terminal.
-2. Type crontab -e to edit the cron table.
+2. Type `crontab -e` to edit the cron table.
 3. Add a new line in the following format to run this script:
 
 ``` bash
@@ -123,4 +123,4 @@ This project is licensed under the Apache v2 License. See the LICENSE file for d
 
 ## Acknowledgments
 
-Inspired by the need for better organization in our downloads folder.
+Inspired by the need for better organization in our Downloads folder.
