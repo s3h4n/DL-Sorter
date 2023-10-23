@@ -89,7 +89,7 @@ to include your preferred file types and destinations.
 - For example, if you want to run your script every hour, you would write:
 
 ``` bash
-0 * * * * /usr/bin/python3 /path/to/your/dl_sorter.py
+0 * * * * cd /path/to/cloned-repo/ && python dl_sorter.py
 ```
 
 5. Save and exit.
