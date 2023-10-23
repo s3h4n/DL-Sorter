@@ -1,0 +1,141 @@
+{
+  "Images": {
+    "type": [
+      ".png",
+      ".jpg",
+      ".jpeg",
+      ".bmp",
+      ".tiff"
+    ],
+    "path": "Images/Raster"
+  },
+  "Vector": {
+    "type": [
+      ".eps",
+      ".ai",
+      ".svg"
+    ],
+    "path": "Images/Vector"
+  },
+  "PSD": {
+    "type": [
+      ".psd"
+    ],
+    "path": "Images/PSD"
+  },
+  "GIF": {
+    "type": [
+      ".gif"
+    ],
+    "path": "Images/GIF"
+  },
+  "Audio": {
+    "type": [
+      ".mp3",
+      ".wav",
+      ".flac"
+    ],
+    "path": "Media/Audio"
+  },
+  "Video": {
+    "type": [
+      ".mp4",
+      ".avi",
+      ".mkv",
+      ".mov"
+    ],
+    "path": "Media/Video"
+  },
+  "Text": {
+    "type": [
+      ".txt",
+      ".rtf",
+      ".md"
+    ],
+    "path": "Documents/Text"
+  },
+  "PDF": {
+    "type": [
+      ".pdf"
+    ],
+    "path": "Documents/PDF"
+  },
+  "Word": {
+    "type": [
+      ".docx"
+    ],
+    "path": "Documents/Word"
+  },
+  "Powerpoint": {
+    "type": [
+      ".pptx",
+      ".ppt",
+      ".pps"
+    ],
+    "path": "Documents/Powerpoint"
+  },
+  "Spreadsheets": {
+    "type": [
+      ".xls",
+      ".xlsx",
+      ".ods"
+    ],
+    "path": "Documents/Spreadsheets"
+  },
+  "Scripts": {
+    "type": [
+      ".py",
+      ".sh",
+      ".bat",
+      ".ps1"
+    ],
+    "path": "Programs/Scripts"
+  },
+  "Packages": {
+    "type": [
+      ".deb",
+      ".rpm",
+      ".pkg",
+      ".msi",
+      ".dmg",
+      ".exe",
+      ".sh"
+    ],
+    "path": "Programs/Executables"
+  },
+  "Compressed": {
+    "type": [
+      ".zip",
+      ".rar",
+      ".7z",
+      ".gz",
+      ".xz",
+      ".tar",
+      ".bz2"
+    ],
+    "path": "Archives/Compressed"
+  },
+  "ISO": {
+    "type": [
+      ".iso"
+    ],
+    "path": "Archives/ISO"
+  },
+  "Fonts": {
+    "type": [
+      ".ttf",
+      ".otf",
+      ".woff",
+      ".woff2"
+    ],
+    "path": "Fonts"
+  },
+  "Database": {
+    "type": [
+      ".sqlite",
+      ".db",
+      ".sql"
+    ],
+    "path": "Databases"
+  }
+}

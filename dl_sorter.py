@@ -2,102 +2,53 @@
 
 Author: W.M.S.R. Weerasekara
 About: This script organizes files from a Downloads directory into specified subdirectories based on file types.
-Github: https://github.com/s3h4n/DL-Sorter
+GitHub: https://github.com/s3h4n/DL-Sorter
 
 """
 
-from pathlib import Path as path
-import platform
+import json
 import logging
 import os
+import platform
+import time
+from pathlib import Path
+
 
 # Logging configuration
 logging.basicConfig(
     filename="dl_sorter.log",
     level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(message)s",
+    format="%(asctime)s | %(levelname)s | %(message)s",
 )
 
 # Define the Downloads directory based on OS
 if platform.system() == "Linux":
-    DOWNLOADS_DIR = f"{path.home()}/Downloads"
+    DOWNLOADS_DIR = f"{Path.home()}/Downloads"
 elif platform.system() == "Windows":
     DOWNLOADS_DIR = os.path.expanduser("~\\Downloads")
 else:
-    print("Unsupported operating system.")
+    print("Error: Unsupported operating system.")
+    logging.error("Error: Unsupported operating system.")
     exit(1)
 
-# Default file types and paths
-FILE_TYPES_AND_PATHS = {
-    "Images": {
-        "type": [".png", ".jpg", ".jpeg", ".bmp", ".tiff"],
-        "path": f"{DOWNLOADS_DIR}/Images/Raster",
-    },
-    "Vector": {
-        "type": [".eps", ".ai", ".svg"],
-        "path": f"{DOWNLOADS_DIR}/Images/Vector",
-    },
-    "PSD": {
-        "type": [".psd"],
-        "path": f"{DOWNLOADS_DIR}/Images/PSD",
-    },
-    "GIF": {
-        "type": [".gif"],
-        "path": f"{DOWNLOADS_DIR}/Images/GIF",
-    },
-    "Audio": {
-        "type": [".mp3", ".wav", ".flac"],
-        "path": f"{DOWNLOADS_DIR}/Media/Audio",
-    },
-    "Video": {
-        "type": [".mp4", ".avi", ".mkv", ".mov"],
-        "path": f"{DOWNLOADS_DIR}/Media/Video",
-    },
-    "Text": {
-        "type": [".txt", ".rtf", ".md"],
-        "path": f"{DOWNLOADS_DIR}/Documents/Text",
-    },
-    "PDF": {
-        "type": [".pdf"],
-        "path": f"{DOWNLOADS_DIR}/Documents/PDF",
-    },
-    "Word": {
-        "type": [".docx"],
-        "path": f"{DOWNLOADS_DIR}/Documents/Word",
-    },
-    "Powerpoint": {
-        "type": [".pptx", ".ppt", ".pps"],
-        "path": f"{DOWNLOADS_DIR}/Documents/Powerpoint",
-    },
-    "Spreadsheets": {
-        "type": [".xls", ".xlsx", ".ods"],
-        "path": f"{DOWNLOADS_DIR}/Documents/Spreadsheets",
-    },
-    "Scripts": {
-        "type": [".py", ".sh", ".bat", ".ps1"],
-        "path": f"{DOWNLOADS_DIR}/Programs/Scripts",
-    },
-    "Packages": {
-        "type": [".deb", ".rpm", ".pkg", ".msi", ".dmg", ".exe", ".sh"],
-        "path": f"{DOWNLOADS_DIR}/Programs/Executables",
-    },
-    "Compressed": {
-        "type": [".zip", ".rar", ".7z", ".gz", ".tar", ".bz2"],
-        "path": f"{DOWNLOADS_DIR}/Archives/Compressed",
-    },
-    "ISO": {
-        "type": [".iso"],
-        "path": f"{DOWNLOADS_DIR}/Archives/ISO",
-    },
-    "Fonts": {
-        "type": [".ttf", ".otf", ".woff", ".woff2"],
-        "path": f"{DOWNLOADS_DIR}/Fonts",
-    },
-    "Database": {
-        "type": [".sqlite", ".db", ".sql"],
-        "path": f"{DOWNLOADS_DIR}/Databases",
-    },
-}
+
+def get_format(filename: str):
+    """
+    Get the list of file formats and their destinations as from pre-defined JSON file.
+    """
+    try:
+        with open(filename, "r") as fp:
+            structure = json.load(fp)
+
+        print(f"`{filename}` successfully loaded.")
+        logging.info(f"`{filename}` successfully loaded.")
+
+        return structure
+
+    except Exception as e:
+        print(f"Error: Failed to load `{filename}`: {e}")
+        logging.error(f"Error: Failed to load `{filename}`: {e}")
+        exit(1)
 
 
 def get_unique_filename(
@@ -113,18 +64,15 @@ def get_unique_filename(
         count = 1
         new_filename = filename
 
-        while path(path(destination).joinpath(new_filename)).exists():
+        while Path(Path(destination).joinpath(new_filename)).exists():
             new_filename = f"{base}_{count}{ext}"
             count += 1
 
         return new_filename
 
     except Exception as e:
-        print(f"Error while renaming {filename}: {e}")
-        logging.error(f"Error while renaming the file {filename}: {e}")
-
-        logging.critical(f"Aborted.")
-
+        print(f"Error: Failed to rename `{filename}`: {e}")
+        logging.error(f"Error: Failed to rename `{filename}`: {e}")
         exit(1)
 
 
@@ -138,36 +86,33 @@ def move_single_file(
     """
 
     try:
-        if not path(destination).exists():
-            # print(f"{destination} not found. Attempting to create...")
-            logging.info(f"{destination} not found. Attempting to create...")
+        if not Path(destination).exists():
+            logging.info(f"`{destination}` not found. Attempting to create...")
 
             try:
-                path(destination).mkdir(parents=True, exist_ok=True)
-
-                # print(f"{destination} created.")
-                logging.info(f"{destination} created.")
+                Path(destination).mkdir(parents=True, exist_ok=True)
+                logging.info(f"`{destination}` created.")
 
             except Exception as e:
-                print(f"Error while creating {destination}: {e}")
-                logging.error(f"Error while creating {destination}: {e}")
+                print(f"Error while creating `{destination}`: {e}")
+                logging.error(f"Error while creating `{destination}`: {e}")
 
                 return False
 
-        _source_file_path = path(source).joinpath(filename)
-        _destination_file_path = path(destination).joinpath(filename)
+        _source_file_path = Path(source).joinpath(filename)
+        _destination_file_path = Path(destination).joinpath(filename)
 
-        if path(_destination_file_path).exists():
-            _destination_file_path = path(destination).joinpath(
+        if Path(_destination_file_path).exists():
+            _destination_file_path = Path(destination).joinpath(
                 get_unique_filename(filename, destination)
             )
 
-        path(_source_file_path).rename(_destination_file_path)
+        Path(_source_file_path).rename(_destination_file_path)
         return True
 
     except Exception as e:
-        print(f"Error: {e}")
-        logging.error(f"Error: {e}")
+        print(f"Error: Couldn't move file `{filename}` : {e}")
+        logging.error(f"Error: Couldn't move file `{filename}` : {e}")
 
         return False
 
@@ -190,11 +135,8 @@ def move_multiple_files(
             return True
 
         for filename in files_list:
-            for ftype in file_types:
-                if filename.endswith(ftype):
-                    # print(f"Moving: {source}/{item}")
-                    # logging.info(f"Moving: {source}/{item}")
-
+            for filetype in file_types:
+                if filename.endswith(filetype):
                     if move_single_file(filename, source, destination):
                         successful_moves += 1
 
@@ -206,21 +148,30 @@ def move_multiple_files(
 
 
 def main():
-    s_moves = {}
+    """
+    Entry point for the script.
+    """
+    __successful_moves = {}
 
-    for file_type in FILE_TYPES_AND_PATHS:
+    __structure = get_format(filename="structure.json")
+
+    for file_type in __structure:
         # Update list every iteration.
-        _file_list = os.listdir(DOWNLOADS_DIR)
+        __file_list = os.listdir(DOWNLOADS_DIR)
+        __sub_directory = __structure[file_type]["path"]
 
-        s_moves[file_type] = move_multiple_files(
+        __successful_moves[file_type] = move_multiple_files(
             source=DOWNLOADS_DIR,
-            destination=FILE_TYPES_AND_PATHS[file_type]["path"],
-            files_list=_file_list,
-            file_types=FILE_TYPES_AND_PATHS[file_type]["type"],
+            destination=f"{Path(DOWNLOADS_DIR).joinpath(__sub_directory)}",
+            files_list=__file_list,
+            file_types=__structure[file_type]["type"],
         )
 
-    print(s_moves)
+    print(__successful_moves)
 
 
 if __name__ == "__main__":
+    start = time.time()
     main()
+    end = time.time()
+    print(f"Execution time: {end - start} seconds")

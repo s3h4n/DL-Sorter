@@ -70,10 +70,11 @@ profile_default/
 ipython_config.py
 
 # PyInstaller
-dist/
+dist
 
 # Environment
 .env
+venv
 
 # Django stuff:
 *.log
